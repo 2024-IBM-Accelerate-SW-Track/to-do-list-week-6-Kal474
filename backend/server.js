@@ -61,6 +61,16 @@ async function addItem (request, response) {
 app.get("/get/items", getItems)
 async function getItems (request, response) {
     //begin here
+    try {
+        // Read the contents of the database.json file
+        const data = await fsPromises.readFile("database.json", "utf8"); 
+        
+        // Parse the data to JSON format and send as response
+        response.json(JSON.parse(data)); 
+    } catch (err) {
+        console.log("error: ", err);
+        response.sendStatus(500); 
+    }
 
 };
 
@@ -68,7 +78,22 @@ async function getItems (request, response) {
 app.get("/get/searchitem", searchItems) 
 async function searchItems (request, response) {
     //begin here
+    try {
+        // Retrieve the parameter passed to the service
+        var searchField = request.query.taskname; // HEREEEEEEE MAAM
 
+        // Read the database
+        var json = JSON.parse(await fsPromises.readFile("database.json")); // HEREEEEEEE MAAM
+
+        // Filter the data
+        var returnData = json.filter(jsondata => jsondata.Task === searchField); // HEREEEEEEE MAAM
+        
+        // Return the filtered data as a response
+        response.json(returnData); // HEREEEEEEE MAAM
+    } catch (err) {
+        console.log("error: ", err);
+        response.sendStatus(500); // HEREEEEEEE MAAM
+    }
 };
 
 
